@@ -24,25 +24,26 @@ public class FCFS{
         StringBuilder sb =new StringBuilder("");
         process CPUrunning = null;
         while(!queue.isEmpty()){
-            if(CPUrunning==null&&queue.peek().arrivalTime<=time){
-                CPUrunning = queue.poll();
-                sb.append(time+"--"+CPUrunning.pid+"--");
-                time += CPUrunning.burstTime;
-                if(queue.isEmpty()){
-                sb.append(time);
-            }
-                CPUrunning=null;
-                
-                continue;
+           process p = queue.peek();
 
-                
+        // CPU idle
+        if (time < p.arrivalTime) {
+            time++;
+            continue;
+        }
 
-            }else{
-                time++;
-            }
-            
-            
+         // Execute process
+        p = queue.poll();
+        sb.append(time + "--" + p.pid + "--");
 
+        p.responseTime = time - p.arrivalTime;
+        p.waitingTime = p.responseTime;
+         time += p.burstTime;
+
+         p.completionTime = time;
+         p.turnAroundTime = p.completionTime - p.arrivalTime;
+
+         sb.append(time + " ");
 
 
 
@@ -50,10 +51,30 @@ public class FCFS{
         }
 
 
-
+System.out.println("Gantt Chart:");
 System.out.println(sb);
 
+
     }
+
+    static void printTable(process[] p) {
+
+    System.out.println("\nPID\tAT\tBT\tCT\tTAT\tWT\tRT");
+    System.out.println("------------------------------------------------");
+
+    for (process pr : p) {
+        System.out.println(
+            pr.pid + "\t" +
+            pr.arrivalTime + "\t" +
+            pr.burstTime + "\t" +
+            pr.completionTime + "\t" +
+            pr.turnAroundTime + "\t" +
+            pr.waitingTime + "\t" +
+            pr.responseTime
+        );
+    }
+}
+
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
@@ -75,6 +96,7 @@ System.out.println(sb);
         }
 
         fcfs(queue);
+        printTable(p);
 
     }
 
