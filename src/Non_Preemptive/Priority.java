@@ -57,6 +57,7 @@ public class Priority{
          sb.append(time + " ");
 
       }
+      System.out.println(sb);
       
    }
 
